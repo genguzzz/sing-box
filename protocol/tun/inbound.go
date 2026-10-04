@@ -424,6 +424,15 @@ func (t *Inbound) Start(stage adapter.StartStage) error {
 				}
 			}
 		}
+		if fd := externalTunFD(); fd > 0 && t.platformInterface == nil {
+			t.logger.Info("using external tun fd ", fd)
+			// TV build: an Android VpnService in a 32-bit app hands its TUN fd to this 64-bit
+			// process. Routes/addresses are already configured by the VpnService; the fd has no
+			// IFF_VNET_HDR, so GSO must stay off.
+			tunOptions.FileDescriptor = fd
+			tunOptions.GSO = false
+			t.tunOptions.GSO = false
+		}
 		monitor.Start("open interface")
 		if t.platformInterface != nil && t.platformInterface.UsePlatformInterface() {
 			tunInterface, err = t.platformInterface.OpenInterface(&tunOptions, t.platformOptions)
