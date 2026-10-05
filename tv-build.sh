@@ -4,7 +4,7 @@
 # where <tvop> is the workspace this repo is a submodule of (external/sing-box), else ~/Code/tvop.
 set -euo pipefail
 cd "$(dirname "$0")"
-TVOP=$(cd "$(dirname "$0")/../.." && pwd)
+TVOP=$(cd ../.. && pwd)   # already in the repo directory
 [ -f "$TVOP/proxy/build.sh" ] || TVOP=$HOME/Code/tvop
 OUT=${1:-$TVOP/proxy/core/libsingbox.so}
 mkdir -p "$(dirname "$OUT")"
